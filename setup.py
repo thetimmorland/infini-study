@@ -12,6 +12,7 @@ setup(
         packages=['infini-study'],
         install_requires=[
             'jupyter',
+            'pyqt5==5.9.2',
         ],
         )
 

@@ -10,5 +10,8 @@ setup(
         author_email='thetimmorland@gmail.com',
         url='https://github.com/thetimmorland/infini-study',
         packages=['infini-study'],
+        install_requires=[
+            'jupyter',
+        ],
         )
 

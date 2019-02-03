@@ -1,10 +1,19 @@
 import sys
 
 from PyQt5.QtWidgets import QApplication
-from mainWindow import mainWindow
+from PyQt5.QtWebEngineWidgets import QWebEngineView
+
+from ui import mainWindow
+from db import problemDb
+from jupyter import jupyterServer
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    win = mainWindow()
+
+    db = problemDb()
+    server = jupyterServer()
+    win = mainWindow(db, server)
     win.show()
+
     sys.exit(app.exec_())
+

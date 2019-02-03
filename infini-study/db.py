@@ -1,35 +1,40 @@
 import sqlite3
-from pathlib import Path
+import os.path
 
-'''CREATE TABLE questions(id INTEGER PRIMARY KEY, notebook NONE,
-created TEXT, modified TEXT, lastAttempt TEXT, difficulty TEXT,
-question TEXT)'''
+class problemDb():
+    def create(self, path):
 
-class db():
-    def open(self, path):
-        self.path = path
-        self.conn = sqlite3.connect(path)
-
-    def new(self, path):
+        # Create blank file
         open(path, 'w+').close()
-        self.open(path)
 
+        self.conn = sqlite3.connect(path)
         cur = self.conn.cursor()
 
         cur.execute('''CREATE TABLE infinistudy
-                (created TEXT, attempted TEXT, 
-                question TEXT, notebook BLOB)'''
+                (id INTEGER PRIMARY KEY, created TEXT,
+                attempted TEXT, question TEXT, notebook BLOB)'''
                 )
 
         self.conn.commit()
-        
 
-class schedule():
-    questions = []
+    def load(self, path):
+        self.conn = sqlite3.connect(path)
 
-    def __init__(self, db, numToStudy):
-        cur = db.conn.cursor()
+    def getRow(self, idx):
+        cur = self.conn.cursor()
+        cur.execute('SELECT * FROM infinistudy WHERE id=?', idx)
+        row = cur.fetchall()
 
-        cur.execute('SELECT * FROM infinistudy ORDER BY attempted ASC')
-        self.questions = cur.fetchmany(numToStudy)
+        self.conn.commit()
+        return row
+    def replaceRow(self, idx, arr):
+        cur = self.conn.cursor()
+        cur.execute('REPLACE INTO infinistudy VALUES (?,?,?,?) WHERE id=?',
+                arr, idx)
+        self.conn.commit()
+
+    def appendRow(self, arr):
+        cur = self.conn.cursor()
+        cur.execute('INSERT INTO infinistudy VALUES (?,?,?,?)', arr)
+        self.conn.commit()
 

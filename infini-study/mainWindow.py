@@ -3,6 +3,8 @@ import PyQt5
 from PyQt5.uic import loadUiType
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 
+from db import db, schedule
+
 # Load UI from QtCreator File
 formClass, _ = loadUiType('infini-study/mainWindow.ui')
 
@@ -13,7 +15,6 @@ class mainWindow(QMainWindow, formClass):
 
         # File Menu Triggers
         self.actionOpen.triggered.connect(self.openClicked)
-        self.actionSave.triggered.connect(self.saveClicked)
         self.actionNew.triggered.connect(self.newClicked)
 
         # Tool Menu Triggers
@@ -35,21 +36,28 @@ class mainWindow(QMainWindow, formClass):
 
     def openClicked(self):
         self.fileDialog = QFileDialog(self)
-        self.fileDialog.getOpenFileName(self)
+        url, _ = self.fileDialog.getOpenFileUrl(self)
+        
+        if url.isValid:
 
+            self.db = db()
+            self.db.open(url.toLocalFile())
 
-    def saveClicked(self):
-        print('save')
-
+            self.schedule = schedule(self.db, 5)
 
     def newClicked(self):
         self.fileDialog = QFileDialog(self)
-        self.fileDialog.getSaveFileName(self)
+        url, _ = self.fileDialog.getSaveFileUrl(self)
 
+        if url.isValid:
+
+            self.db = db()
+            self.db.new(url.toLocalFile())
+            
+            self.addClicked()
 
     def addClicked(self):
         self.stackView.setCurrentIndex(1)
-
 
     def editClicked(self):
         self.stackView.setCurrentIndex(1)
@@ -58,10 +66,8 @@ class mainWindow(QMainWindow, formClass):
     def aboutClicked(self):
         print('about')
 
-
     def submitClicked(self):
         print('submit')
-
 
     def showSolClicked(self):
         print('show')

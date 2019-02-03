@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
+from distutils.command.build_py import build_py as _build_py
 from distutils.core import setup
+
+class 
 
 setup(
         name='infini-study',

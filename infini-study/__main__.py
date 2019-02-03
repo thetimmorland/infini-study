@@ -1,8 +1,10 @@
-from db import newDb, scheduler
-from pathlib import Path
-import os
+import sys
 
+from PyQt5.QtWidgets import QApplication
+from mainWindow import mainWindow
 
 if __name__ == '__main__':
-    newDb(Path('boi.db'))
-    scheduler(Path('boi.db'), 5)
+    app = QApplication(sys.argv)
+    win = mainWindow()
+    win.show()
+    sys.exit(app.exec_())
